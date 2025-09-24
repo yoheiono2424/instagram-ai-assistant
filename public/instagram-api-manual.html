@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram API設定マニュアル</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .manual-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #764ba2;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+        h2 {
+            color: #667eea;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        h3 {
+            color: #555;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .checklist {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .checklist li {
+            list-style: none;
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        .checklist li:before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .warning:before {
+            content: "⚠️ ";
+            font-size: 1.2em;
+        }
+        .info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #0d47a1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #e8f5e9;
+            border: 1px solid #4caf50;
+            color: #1b5e20;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .button-example {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 10px 0;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        .step-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+        }
+        ol {
+            margin-left: 20px;
+        }
+        ol li {
+            margin: 10px 0;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        ul li {
+            margin: 8px 0;
+        }
+        .token-example {
+            background: #f0f0f0;
+            padding: 10px;
+            border: 1px dashed #999;
+            border-radius: 4px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="manual-card">
+            <h1>📖 Instagram API設定マニュアル</h1>
+
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">
+                Instagram Graph APIのアクセストークンを取得し、<br>
+                本アプリケーションと連携する方法を<strong>初心者の方でもわかりやすく</strong>説明します。
+            </p>
+
+            <div class="info">
+                <h3>🎯 このマニュアルでできること</h3>
+                <p>Instagram投稿AIアシスタントを使うために必要な以下の情報を取得できます：</p>
+                <ul>
+                    <li><strong>アクセストークン</strong>（APIを使うための認証キー）</li>
+                    <li><strong>ビジネスアカウントID</strong>（あなたのInstagramアカウントの識別番号）</li>
+                </ul>
+            </div>
+
+            <h2>📋 事前準備チェックリスト</h2>
+            <div class="checklist">
+                <h3>必要なアカウント</h3>
+                <li><strong>Instagramアカウント</strong> - ビジネスまたはクリエイターアカウント</li>
+                <li><strong>Facebookページ</strong> - InstagramアカウントとFacebookページが連携済み</li>
+                <li><strong>Facebook開発者アカウント</strong> - Meta for Developersにログインできる</li>
+            </div>
+
+            <h2><span class="step-number">1</span>Instagramをビジネスアカウントに切り替える</h2>
+            <div class="step-card">
+                <p style="color: #666; margin-bottom: 15px;">
+                    <em>既にビジネスアカウントの方はスキップしてください</em>
+                </p>
+                <h3>📱 スマートフォンでの設定方法</h3>
+                <ol>
+                    <li>Instagramアプリを開く</li>
+                    <li>プロフィール画面右上の「≡」メニューをタップ</li>
+                    <li>「設定とプライバシー」をタップ</li>
+                    <li>「アカウントの種類とツール」をタップ</li>
+                    <li>「プロアカウントに切り替える」をタップ</li>
+                    <li>カテゴリを選択（あなたのビジネスに合うものを選択）</li>
+                    <li>「ビジネス」を選択</li>
+                    <li>連絡先情報を入力して完了！</li>
+                </ol>
+            </div>
+
+            <h2><span class="step-number">2</span>FacebookページとInstagramを連携</h2>
+            <div class="step-card">
+                <h3>📱 スマートフォンでの設定方法</h3>
+                <ol>
+                    <li>Facebookアプリを開く</li>
+                    <li>メニューから「ページ」を選択</li>
+                    <li>あなたのページを選択</li>
+                    <li>「設定」→「Instagram」を選択</li>
+                    <li>「アカウントをリンク」をタップ</li>
+                    <li>Instagramにログインして連携完了！</li>
+                </ol>
+            </div>
+
+            <h2><span class="step-number">3</span>Meta for Developersでアプリを作成</h2>
+            <div class="step-card">
+                <h3>1️⃣ Meta for Developersにアクセス</h3>
+                <ol>
+                    <li><a href="https://developers.facebook.com/" target="_blank" style="color: #667eea;">Meta for Developers</a>にアクセス</li>
+                    <li>右上の「ログイン」ボタンをクリック</li>
+                    <li>Facebookアカウントでログイン</li>
+                </ol>
+
+                <h3>2️⃣ 新しいアプリを作成</h3>
+                <ol>
+                    <li>ダッシュボードで「<strong>アプリを作成</strong>」ボタンをクリック</li>
+                    <li>「<strong>ビジネス</strong>」タイプを選択して「次へ」</li>
+                    <li>アプリ情報を入力：
+                        <ul>
+                            <li><strong>アプリ名</strong>: Instagram投稿アシスタント（任意の名前でOK）</li>
+                            <li><strong>アプリの連絡先メールアドレス</strong>: あなたのメールアドレス</li>
+                        </ul>
+                    </li>
+                    <li>「アプリを作成」をクリック</li>
+                </ol>
+
+                <h3>3️⃣ Instagram Graph APIを追加</h3>
+                <ol>
+                    <li>アプリダッシュボードの左メニューから「<strong>プロダクトを追加</strong>」をクリック</li>
+                    <li>「<strong>Instagram Graph API</strong>」を見つけて「<strong>設定</strong>」ボタンをクリック</li>
+                    <li>「<strong>開始する</strong>」をクリック</li>
+                </ol>
+            </div>
+
+            <h2><span class="step-number">4</span>アクセストークンを取得</h2>
+            <div class="step-card">
+                <h3>1️⃣ Graph API エクスプローラーを開く</h3>
+                <p>左メニューから「<strong>ツール</strong>」→「<strong>Graph API エクスプローラー</strong>」を選択</p>
+
+                <h3>2️⃣ アプリとユーザーを選択</h3>
+                <ol>
+                    <li><strong>Meta App</strong>のドロップダウンから、先ほど作成したアプリを選択</li>
+                    <li><strong>User or Page</strong>のドロップダウンから「<strong>Get User Access Token</strong>」を選択</li>
+                </ol>
+
+                <h3>3️⃣ 必要な権限を選択</h3>
+                <div class="checklist">
+                    <h4>📝 必須の権限</h4>
+                    <li>instagram_basic</li>
+                    <li>instagram_content_publish</li>
+                    <li>pages_show_list</li>
+                    <li>pages_read_engagement</li>
+                    <li>business_management</li>
+                </div>
+
+                <h3>4️⃣ アクセストークンを生成</h3>
+                <ol>
+                    <li>「<strong>Generate Access Token</strong>」ボタンをクリック</li>
+                    <li>Facebookのログイン画面が表示されたら、ログインして権限を許可</li>
+                    <li>生成された<strong>アクセストークン</strong>が表示されます</li>
+                </ol>
+
+                <div class="token-example">
+                    EAABwzLixnjYBOZDZD... （長い文字列）
+                </div>
+
+                <div class="warning">
+                    <strong>重要</strong>: このトークンを<strong>コピーして安全な場所に保存</strong>してください！
+                </div>
+            </div>
+
+            <h2><span class="step-number">5</span>ビジネスアカウントIDを取得</h2>
+            <div class="step-card">
+                <h3>Graph API エクスプローラーで取得</h3>
+                <ol>
+                    <li>Graph API エクスプローラーの入力欄に以下を入力：
+                        <div class="code-block">me/accounts</div>
+                    </li>
+                    <li>「<strong>Submit</strong>」ボタンをクリック</li>
+                    <li>結果からあなたのFacebookページの<code>id</code>をメモします</li>
+                    <li>次に、入力欄に以下を入力（PAGE_IDは上でメモしたIDに置き換え）：
+                        <div class="code-block">PAGE_ID?fields=instagram_business_account</div>
+                    </li>
+                    <li>「<strong>Submit</strong>」をクリック</li>
+                    <li>結果から<code>instagram_business_account</code>の<code>id</code>をメモします
+                        <div class="token-example">17841444355555555</div>
+                    </li>
+                </ol>
+            </div>
+
+            <h2><span class="step-number">6</span>アプリに設定を入力</h2>
+            <div class="step-card">
+                <ol>
+                    <li>Instagram投稿AIアシスタントの「<strong>設定</strong>」画面を開く</li>
+                    <li>「<strong>Instagram連携</strong>」タブを選択</li>
+                    <li>以下の情報を入力：
+                        <ul>
+                            <li><strong>アクセストークン</strong>: ステップ4で取得した文字列</li>
+                            <li><strong>ビジネスアカウントID</strong>: ステップ5で取得した数字</li>
+                        </ul>
+                    </li>
+                    <li>「<strong>接続テスト</strong>」ボタンをクリックして接続を確認</li>
+                    <li>「<strong>設定を保存</strong>」をクリックして完了！</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                <h3>⚠️ 重要な注意事項</h3>
+                <ul>
+                    <li>アクセストークンは<strong>60日で有効期限が切れます</strong></li>
+                    <li>アクセストークンは<strong>パスワードと同じくらい重要</strong>です</li>
+                    <li>他人と共有したり、公開したりしないでください</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>🎉 設定完了！</h3>
+                <p>おめでとうございます！これでInstagram投稿AIアシスタントを使う準備が整いました。</p>
+                <p style="margin-top: 15px;"><strong>次のステップ：</strong></p>
+                <ol>
+                    <li><strong>AI設定</strong>から、あなたのビジネスに合った設定を行いましょう</li>
+                    <li><strong>新規投稿作成</strong>から、最初の投稿を作成してみましょう</li>
+                    <li><strong>投稿カレンダー</strong>で、計画的な投稿スケジュールを立てましょう</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
